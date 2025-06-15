@@ -81,6 +81,7 @@ PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.actor.use_kl_loss=true \
     actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=8 \
     actor_rollout_ref.ref.fsdp_config.param_offload=true \
+    +critic.model.fsdp_config.forward_prefetch=True \
     critic.optim.lr=1e-5 \
     critic.model.path=${model} \
     critic.ppo_micro_batch_size_per_gpu=8 \
