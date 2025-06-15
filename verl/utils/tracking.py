@@ -34,7 +34,7 @@ class Tracking:
         logger: Dictionary of initialized logger instances for each backend.
     """
 
-    supported_backend = ["wandb", "mlflow", "swanlab", "vemlp_wandb", "tensorboard", "console", "clearml"]
+    supported_backend = ["wandb", "mlflow", "swanlab", "vemlp_wandb", "tensorboard", "jsonlogger", "console", "clearml"]
 
     def __init__(self, project_name, experiment_name, default_backend: Union[str, List[str]] = "console", config=None):
         if isinstance(default_backend, str):
@@ -118,6 +118,11 @@ class Tracking:
 
         if "tensorboard" in default_backend:
             self.logger["tensorboard"] = _TensorboardAdapter()
+
+        if 'jsonlogger' in default_backend:
+            from verl.utils.jsonlogger import JSONLogger
+            self.json_logger = JSONLogger(project_name, experiment_name, config)
+            self.logger['jsonlogger'] = self.json_logger
 
         if "console" in default_backend:
             from verl.utils.logger import LocalLogger
