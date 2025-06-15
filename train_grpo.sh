@@ -48,6 +48,8 @@ fi
 
 set_variable_with_default n grpo_n_agent 5 16
 
+set_variable_with_default rollout rollout vllm sglang
+
 export experiment_name=${model_name}-$(date +%m.%d-%H:%M:%S)-n_${n}-$(echo "$CUDA_VISIBLE_DEVICES" | tr -d ',')
 
 mkdir -p tmp/logs/$experiment_name
@@ -58,7 +60,7 @@ PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.model.path=${model} \
     actor_rollout_ref.model.enable_gradient_checkpointing=true \
     actor_rollout_ref.model.use_remove_padding=true \
-    actor_rollout_ref.rollout.name=sglang \
+    actor_rollout_ref.rollout.name=${rollout} \
     actor_rollout_ref.rollout.mode=sync \
     actor_rollout_ref.rollout.max_model_len=32768 \
     actor_rollout_ref.rollout.tensor_model_parallel_size=2 \

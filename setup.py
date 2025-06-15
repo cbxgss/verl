@@ -42,6 +42,7 @@ install_requires = [
     "wandb",
     "packaging>=20.0",
     "ipdb",
+    "matplotlib",
 ]
 
 TEST_REQUIRES = ["pytest", "pre-commit", "py-spy"]
