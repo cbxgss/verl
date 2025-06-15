@@ -24,17 +24,24 @@ from verl.trainer.ppo.reward import load_reward_manager
 
 @hydra.main(config_path="config", config_name="ppo_trainer", version_base=None)
 def main(config):
-    run_ppo(config)
+    try:
+        run_ppo(config)
+    except Exception as e:
+        import traceback, ipdb
+        print(f"exception arg: {e.args}")
+        print(f"traceback info: \n{traceback.format_exc()}")
+        ipdb.post_mortem()
 
 
 # Define a function to run the PPO-like training process
 def run_ppo(config) -> None:
     # Check if Ray is not initialized
-    if not ray.is_initialized():
-        # Initialize Ray with a local cluster configuration
-        # Set environment variables in the runtime environment to control tokenizer parallelism,
-        # NCCL debug level, VLLM logging level, and allow runtime LoRA updating
-        # `num_cpus` specifies the number of CPU cores Ray can use, obtained from the configuration
+    if config.ray_init.debug:
+        ray.init(
+            runtime_env={'env_vars': {'TOKENIZERS_PARALLELISM': 'true', 'NCCL_DEBUG': 'WARN', "VLLM_LOGGING_LEVEL": "WARN", "VLLM_ALLOW_RUNTIME_LORA_UPDATING": "true", "RAY_DEBUG": "legacy"}},
+            num_cpus=config.ray_init.num_cpus,
+        )
+    else:
         ray.init(
             runtime_env={"env_vars": {"TOKENIZERS_PARALLELISM": "true", "NCCL_DEBUG": "WARN", "VLLM_LOGGING_LEVEL": "WARN", "VLLM_ALLOW_RUNTIME_LORA_UPDATING": "true"}},
             num_cpus=config.ray_init.num_cpus,

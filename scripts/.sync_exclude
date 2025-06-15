@@ -1,0 +1,14 @@
+.idea
+.vscode
+
+logs
+data
+
+tmp
+
+.env
+uv.lock
+.venv
+__pycache__
+
+.git

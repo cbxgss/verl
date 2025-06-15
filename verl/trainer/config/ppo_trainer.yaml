@@ -17,10 +17,10 @@ data:
   # The program will read all files into memory, so it can't be too large (< 100GB).
   # The path can be either a local path or an HDFS path.
   # For HDFS path, we provide utils to download it to DRAM and convert it to a local path.
-  train_files: ~/data/rlhf/gsm8k/train.parquet
+  train_files: data/gsm8k/train.parquet
 
   # Validation parquet. Can be a list or a single file.
-  val_files: ~/data/rlhf/gsm8k/test.parquet
+  val_files: data/gsm8k/test.parquet
 
   # The field in the dataset where the prompt is located. Default is 'prompt'.
   prompt_key: prompt
@@ -133,17 +133,11 @@ actor_rollout_ref:
     
     # Whether to use custom fused kernels (e.g., FlashAttention, fused MLP)
     use_fused_kernels: false
-
-    # Options for fused kernels. If use_fused_kernels is true, this will be used.
-    fused_kernel_options:
-
-      # Implementation backend for fused kernels. Options: "triton" or "torch".
-      impl_backend: torch
     
     # Whether to enable loading a remote code model
     trust_remote_code: false
 
-  # actor configs
+  # configs for the actor
   actor:
   
     # fsdp, fsdp2 or megatron. fsdp backend used here.
@@ -207,21 +201,12 @@ actor_rollout_ref:
     # Sequence parallelism size for Ulysses-style model parallelism
     ulysses_sequence_parallel_size: 1
 
-    # calculate entropy with chunking to reduce memory peak
-    entropy_from_logits_with_chunking: False
-
-    # recompute entropy
-    entropy_checkpointing: False
-
     # checkpoint configs
     checkpoint:
     
       # What to include in saved checkpoints
       # with 'hf_model' you can save whole model as hf format, now only use sharded model checkpoint to save space
-      save_contents: ['model', 'optimizer', 'extra']
-
-      # For more flexibility, you can specify the contents to load from the checkpoint.
-      load_contents: ${actor_rollout_ref.actor.checkpoint.save_contents}
+      contents: ['model', 'optimizer', 'extra']
 
     # optimizer configs
     optim:
@@ -274,10 +259,6 @@ actor_rollout_ref:
       # Number of GPUs in each FSDP shard group; -1 means auto
       fsdp_size: -1
 
-      # Only for FSDP1: FSDP1 configuration, prefetch the next forward-pass all-gather
-      # before the current forward computation.
-      forward_prefetch: False
-
   # Reference model config.
   # Reference model will be enabled when actor.use_kl_loss or/and algorithm.use_kl_in_reward is/are True.
   ref:
@@ -294,10 +275,6 @@ actor_rollout_ref:
       # whether to perform reshard after model forward to save memory.
       # only for fsdp2, [True, False, int between 1 and fsdp_size]
       reshard_after_forward: True
-
-      # Only for FSDP1: FSDP1 configuration, prefetch the next forward-pass all-gather
-      # before the current forward computation.
-      forward_prefetch: False
 
       # the wrap policy for FSDP model
       wrap_policy:
@@ -323,12 +300,6 @@ actor_rollout_ref:
 
     # sequence parallel size
     ulysses_sequence_parallel_size: ${actor_rollout_ref.actor.ulysses_sequence_parallel_size}
-
-    # calculate entropy with chunking to reduce memory peak
-    entropy_from_logits_with_chunking: False
-
-    # recompute entropy
-    entropy_checkpointing: False
 
   # Rollout model config.
   rollout:
@@ -463,20 +434,11 @@ actor_rollout_ref:
       # null for no tool
       tool_config_path: null
 
+      # chatml, more formats will be supported in the future
+      format: chatml 
+
       # null for default callback
       completion_callback: null
-
-      # - When set to True, the model's default chat template is used for multi-turn rollout, which typically matches production behavior.
-      # - When set to False, the token ids recorded for training are used instead; unlike the default chat template, these always include the model's full output,
-      #   which may contain additional content such as reasoning content. This maintains the consistency between training and rollout, but it will lead to longer prompts.
-      use_inference_chat_template: False
-
-      # Tokenization is performed turn by turn and the resulting token ids are concatenated to form the full conversation.
-      # To ensure this matches the result of tokenizing the entire conversation at once, a sanity check is run at the end of each multi-turn rollout to compare the two sets of token ids.
-      # Some models are known to produce different tokenization results when tokenizing turn by turn vs. all at once. aThis behavior has already been validated for them.
-      # To reduce excessive warnings, you can turn off the sanity check for these models if you are using their default chat template:
-      # Qwen/QwQ-32B, Qwen/Qwen3-xxB
-      enable_tokenization_sanity_check: True
 
 # configs for the critic
 critic:
@@ -562,10 +524,6 @@ critic:
       # Number of GPUs in each FSDP shard group; -1 means auto
       fsdp_size: -1
 
-      # Only for FSDP1: FSDP1 configuration, prefetch the next forward-pass all-gather
-      # before the current forward computation.
-      forward_prefetch: False
-
     # Set to positive value to enable LoRA (e.g., 32)
     lora_rank: 0
 
@@ -622,10 +580,7 @@ critic:
 
     # What to include in saved checkpoints
     # with 'hf_model' you can save whole model as hf format, now only use sharded model checkpoint to save space
-    save_contents: ['model', 'optimizer', 'extra']
-
-    # What to include when loading checkpoints
-    load_contents: ${critic.checkpoint.save_contents}
+    contents: ['model', 'optimizer', 'extra']
 
 # configs for the reward model
 reward_model:
@@ -683,10 +638,6 @@ reward_model:
 
       # Number of GPUs in each FSDP shard group; -1 means auto
       fsdp_size: -1
-
-      # Only for FSDP1: FSDP1 configuration, prefetch the next forward-pass all-gather
-      # before the current forward computation.
-      forward_prefetch: False
 
   # [Deprecated] Global micro batch size
   micro_batch_size: null
@@ -800,7 +751,7 @@ trainer:
   experiment_name: gsm8k
 
   # Logging backends to use: "console", "wandb", etc.
-  logger: [ 'console', 'wandb' ]
+  logger: [ 'console', 'jsonlogger' ]
 
   # Number of generations to log during validation
   log_val_generations: 0
@@ -867,3 +818,5 @@ ray_init:
 
   # Path to save Ray timeline JSON for performance profiling
   timeline_json_file: null
+
+  debug: False

@@ -41,6 +41,7 @@ install_requires = [
     "transformers",
     "wandb",
     "packaging>=20.0",
+    "ipdb",
 ]
 
 TEST_REQUIRES = ["pytest", "pre-commit", "py-spy"]
@@ -59,7 +60,7 @@ TRL_REQUIRES = ["trl<=0.9.6"]
 
 extras_require = {
     "test": TEST_REQUIRES,
-    "prime": PRIME_REQUIRES,
+    # "prime": PRIME_REQUIRES,
     "geo": GEO_REQUIRES,
     "gpu": GPU_REQUIRES,
     "math": MATH_REQUIRES,
