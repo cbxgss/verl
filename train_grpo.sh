@@ -50,7 +50,7 @@ set_variable_with_default n grpo_n_agent 5 16
 
 set_variable_with_default rollout rollout vllm sglang
 
-export experiment_name=${model_name}-$(date +%m.%d-%H:%M:%S)-n_${n}-$(echo "$CUDA_VISIBLE_DEVICES" | tr -d ',')
+export experiment_name=${model_name}-${rollout}-$(date +%m.%d-%H:%M:%S)-n_${n}-$(echo "$CUDA_VISIBLE_DEVICES" | tr -d ',')
 
 mkdir -p tmp/logs/$experiment_name
 PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_ppo \
