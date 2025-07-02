@@ -49,7 +49,8 @@ fi
 
 set_variable_with_default n grpo_n_agent 5 16
 
-set_variable_with_default rollout rollout vllm sglang
+# set_variable_with_default rollout rollout vllm sglang
+rollout=sglang
 
 export experiment_name=${model_name}-${rollout}-$(date +%m.%d-%H:%M:%S)-n_${n}-$(echo "$CUDA_VISIBLE_DEVICES" | tr -d ',')
 
@@ -82,8 +83,6 @@ PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=8 \
     actor_rollout_ref.ref.fsdp_config.param_offload=true \
     actor_rollout_ref.ref.entropy_checkpointing=True \
-    actor_rollout_ref.actor.entropy_from_logits_with_chunking=True \
-    actor_rollout_ref.ref.entropy_from_logits_with_chunking=True \
     critic.optim.lr=1e-5 \
     critic.model.path=${model} \
     critic.ppo_micro_batch_size_per_gpu=8 \
