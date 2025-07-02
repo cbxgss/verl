@@ -46,8 +46,6 @@ def run_ppo(config) -> None:
                 'env_vars': {
                     'TOKENIZERS_PARALLELISM': 'true',
                     'NCCL_DEBUG': 'WARN',
-                    "CUDA_HOME": "/usr/local/cuda",
-                    "LD_LIBRARY_PATH": "/usr/local/cuda/lib64",
                     "VLLM_LOGGING_LEVEL": "WARN",
                     "VLLM_ALLOW_RUNTIME_LORA_UPDATING": "true",
                     "RAY_DEBUG": "legacy"
@@ -61,8 +59,6 @@ def run_ppo(config) -> None:
                 "env_vars": {
                     "TOKENIZERS_PARALLELISM": "true",
                     "NCCL_DEBUG": "WARN",
-                    "CUDA_HOME": "/usr/local/cuda",
-                    "LD_LIBRARY_PATH": "/usr/local/cuda/lib64",
                     "VLLM_LOGGING_LEVEL": "WARN",
                     "VLLM_ALLOW_RUNTIME_LORA_UPDATING": "true",
                 }

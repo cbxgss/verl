@@ -54,6 +54,8 @@ rollout=sglang
 
 export experiment_name=${model_name}-${rollout}-$(date +%m.%d-%H:%M:%S)-n_${n}-$(echo "$CUDA_VISIBLE_DEVICES" | tr -d ',')
 
+export SGL_DISABLE_TP_MEMORY_INBALANCE_CHECK=True
+
 mkdir -p tmp/logs/$experiment_name
 PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_ppo \
     data.train_batch_size=256 \
