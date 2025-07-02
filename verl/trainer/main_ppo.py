@@ -163,7 +163,7 @@ class TaskRunner:
         # Map roles to the resource pool.
         global_pool_id = "global_pool"
         resource_pool_spec = {
-            global_pool_id: [config.trainer.n_gpus_per_node] * config.trainer.nnodes,
+            global_pool_id: [config.trainer.n_gpus_per_node - 1] * config.trainer.nnodes,
         }
         mapping = {
             Role.ActorRollout: global_pool_id,
