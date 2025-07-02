@@ -207,7 +207,6 @@ class AgentLoopWorker:
             batch.non_tensor_batch["agent_name"] = np.array(["single_turn_agent"] * len(batch), dtype=object)
 
         agent_names = batch.non_tensor_batch["agent_name"].repeat(n, axis=0)
-        breakpoint()
         raw_prompts = batch.non_tensor_batch["raw_prompt"].repeat(n, axis=0)
         for agent_name, messages in zip(agent_names, raw_prompts):
             tasks.append(asyncio.create_task(self._run_agent_loop(agent_name, messages.tolist(), sampling_params)))

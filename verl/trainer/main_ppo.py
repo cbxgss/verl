@@ -28,13 +28,7 @@ from verl.trainer.ppo.reward import load_reward_manager
 
 @hydra.main(config_path="config", config_name="ppo_trainer", version_base=None)
 def main(config):
-    try:
-        run_ppo(config)
-    except Exception as e:
-        import traceback, ipdb
-        print(f"exception arg: {e.args}")
-        print(f"traceback info: \n{traceback.format_exc()}")
-        ipdb.post_mortem()
+    run_ppo(config)
 
 
 # Define a function to run the PPO-like training process
