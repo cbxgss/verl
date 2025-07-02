@@ -698,6 +698,10 @@ critic:
   # Loss aggregation mode: "token-mean", "seq-mean-token-sum", or "seq-mean-token-mean"
   loss_agg_mode: ${actor_rollout_ref.actor.loss_agg_mode}
 
+  fsdp_config:
+    # FSDP strategy: "fsdp" or "fsdp2"
+    forward_prefetch: False
+
   # checkpoint configs
   checkpoint:
 
