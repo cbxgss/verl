@@ -238,6 +238,9 @@ actor_rollout_ref:
     # calculate entropy with chunking to reduce memory peak
     entropy_from_logits_with_chunking: False
 
+    # recompute entropy
+    entropy_checkpointing: False
+
     # checkpoint configs
     checkpoint:
 
