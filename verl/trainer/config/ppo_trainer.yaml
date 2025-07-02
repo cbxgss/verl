@@ -235,6 +235,9 @@ actor_rollout_ref:
     # Sequence parallelism size for Ulysses-style model parallelism
     ulysses_sequence_parallel_size: 1
 
+    # calculate entropy with chunking to reduce memory peak
+    entropy_from_logits_with_chunking: False
+
     # checkpoint configs
     checkpoint:
 
