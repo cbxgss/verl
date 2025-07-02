@@ -55,7 +55,7 @@ SGLANG_REQUIRES = [
     "tensordict<=0.6.2",
     "sglang[all]==0.4.8",
     "torch-memory-saver>=0.0.5",
-    "torch==2.6.0",
+    "torch==2.7.1",
 ]
 TRL_REQUIRES = ["trl<=0.9.6"]
 
