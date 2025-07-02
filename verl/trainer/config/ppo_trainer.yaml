@@ -647,6 +647,9 @@ critic:
       # Number of GPUs in each FSDP shard group; -1 means auto
       fsdp_size: -1
 
+      # FSDP strategy: "fsdp" or "fsdp2"
+      forward_prefetch: False
+
     # Set to positive value to enable LoRA (e.g., 32)
     lora_rank: 0
 
@@ -697,10 +700,6 @@ critic:
 
   # Loss aggregation mode: "token-mean", "seq-mean-token-sum", or "seq-mean-token-mean"
   loss_agg_mode: ${actor_rollout_ref.actor.loss_agg_mode}
-
-  fsdp_config:
-    # FSDP strategy: "fsdp" or "fsdp2"
-    forward_prefetch: False
 
   # checkpoint configs
   checkpoint:
